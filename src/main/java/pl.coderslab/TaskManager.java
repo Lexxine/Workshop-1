@@ -8,12 +8,13 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class TaskManager {
+    public static String[][] tasks = new String[0][3];
     public static void main(String[] args) {
+        loadData();
         selectAnOption();
 
     }
-   public static String[][] tasks = new String[0][3];
-    public static String[][] loadData() {
+    public static void loadData() {
 
         File file = new File("tasks.csv");
 
@@ -31,7 +32,6 @@ public class TaskManager {
         } catch (FileNotFoundException e) {
             System.out.println(e);
         }
-        return tasks;
     }
 
 
@@ -53,7 +53,7 @@ public class TaskManager {
                     // removeTask();
                     break;
                 case "list":
-                    for (String[] row : loadData()) {
+                    for (String[] row : tasks) {
                         for (String element : row) {
                             System.out.print(element + " ");
                         }
@@ -70,20 +70,18 @@ public class TaskManager {
     }
     public static void addTask(){
         Scanner scanner = new Scanner(System.in);
+        int rows = tasks.length;
+        tasks = Arrays.copyOf(tasks, rows + 1);
+        tasks[rows] = new String[3];
         System.out.println("Please add task description");
         String description = scanner.nextLine();
-        add(description);
+        tasks[rows][0] = description;
         System.out.println("Please add task due date");
         String date = scanner.nextLine();
-        add(date);
+        tasks[rows][1] = date;
         System.out.println("Is your task important: true/false");
         String importance = scanner.nextLine();
-        add(importance);
+        tasks[rows][2] = importance;
 
-    }
-    public static void add(String element){
-        String[] task = new String[0];
-        task = Arrays.copyOf(task, task.length +1);
-        task[task.length-1] =  element;
     }
 }
