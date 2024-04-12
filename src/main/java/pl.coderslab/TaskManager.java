@@ -1,5 +1,6 @@
 package pl.coderslab;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -9,11 +10,13 @@ import java.util.Scanner;
 
 public class TaskManager {
     public static String[][] tasks = new String[0][3];
+
     public static void main(String[] args) {
         loadData();
         selectAnOption();
 
     }
+
     public static void loadData() {
 
         File file = new File("tasks.csv");
@@ -50,7 +53,7 @@ public class TaskManager {
                     addTask();
                     break;
                 case "remove":
-                    // removeTask();
+                    removeTask();
                     break;
                 case "list":
                     for (String[] row : tasks) {
@@ -68,7 +71,8 @@ public class TaskManager {
             }
         }
     }
-    public static void addTask(){
+
+    public static void addTask() {
         Scanner scanner = new Scanner(System.in);
         int rows = tasks.length;
         tasks = Arrays.copyOf(tasks, rows + 1);
@@ -83,5 +87,25 @@ public class TaskManager {
         String importance = scanner.nextLine();
         tasks[rows][2] = importance;
 
+    }
+
+    public static void removeTask() {
+        while(true) {
+            System.out.println("Please select number of task to remove.");
+            Scanner scanner = new Scanner(System.in);
+            try {
+                while (!scanner.hasNextInt()) {
+                    scanner.next();
+                    System.out.println("Please select a number.");
+                }
+                int taskNumber = scanner.nextInt();
+                tasks = ArrayUtils.remove(tasks, taskNumber - 1);
+                System.out.println("Task was successfully deleted.");
+                break;
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println("Please select correct option");
+
+            }
+        }
     }
 }
