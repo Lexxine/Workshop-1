@@ -5,6 +5,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -64,8 +70,10 @@ public class TaskManager {
                     }
                     break;
                 case "exit":
-                    //exit();
-                    break;
+                    exit("tasks.csv");
+                    System.out.println(ConsoleColors.RED + "Bye, bye.");
+                    return;
+
                 default:
                     System.out.println("Please select a correct option.");
             }
@@ -90,7 +98,7 @@ public class TaskManager {
     }
 
     public static void removeTask() {
-        while(true) {
+        while (true) {
             System.out.println("Please select number of task to remove.");
             Scanner scanner = new Scanner(System.in);
             try {
@@ -108,4 +116,31 @@ public class TaskManager {
             }
         }
     }
+
+    public static void exit(String fileName) {
+        Path path = Paths.get(fileName);
+        if (!Files.exists(path)) {
+            System.out.println("plik nie istnieje");
+            try {
+                Files.createFile(path);
+            } catch (IOException e) {
+                System.out.println("Błąd podczas tworzenia pliku");
+            }
+            return;
+        }
+        try (PrintWriter pw = new PrintWriter("tasks.csv")) {
+            for (String[] row : tasks) {
+                for (int i = 0; i < row.length; i++) {
+                    pw.print(row[i]);
+                    if (i < row.length - 1) {
+                       pw.print(",");
+                   }
+                }
+                pw.println();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Błąd przy zapisie");
+        }
+    }
 }
+
